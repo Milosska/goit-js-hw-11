@@ -1,27 +1,30 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api/';
+const KEY = '32924526-f9591cfa3face167d801f2034';
 const options = {
-  key: '32924526-f9591cfa3face167d801f2034',
   image_type: 'photo',
   orientation: 'horizontal',
   safesearch: true,
+  per_page: 40,
 };
 
-function makeAddressParams(
-  query,
-  { key, image_type, orientation, safesearch }
-) {
-  const params = `key=${key}&q=${query}&image_type=${image_type}&orientation=${orientation}&safesearch=${safesearch}`;
+function makeAddressParams(query, page, options) {
+  let optionsString = '';
+
+  Object.entries(options).forEach(elem => {
+    optionsString += `&${elem[0]}=${elem[1]}`;
+  });
+
+  const params = `key=${KEY}&q=${query}${optionsString}&page=${page}`;
   return params;
 }
 
-async function fetchPhotos(query) {
-  const params = makeAddressParams(query, options);
+async function fetchPhotos(query, page) {
+  const params = makeAddressParams(query, page, options);
   try {
     const response = await axios.get(`${BASE_URL}?${params}`);
-    const photos = response.data.hits;
-    return photos;
+    return response.data;
   } catch (error) {
     console.error(error);
   }
