@@ -1,4 +1,5 @@
 import { fetchPhotos } from './js/fetchPhotos';
+import galleryMarkup from './templates/gallery-markup.hbs';
 import Notiflix from 'notiflix';
 
 const formEl = document.querySelector('.search-form');
@@ -20,6 +21,7 @@ function onFormSubmit(e) {
       }
 
       Notiflix.Notify.success(`Hooray! We found ${total} images.`);
+      console.log(hits);
 
       galleryEl.insertAdjacentHTML('beforeend', makePhotosMarkup(hits));
     })
@@ -27,25 +29,5 @@ function onFormSubmit(e) {
 }
 
 function makePhotosMarkup(arr) {
-  return arr
-    .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
-      return `<div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b> ${likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b> ${views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b> ${comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>${downloads}
-    </p>
-  </div>
-</div>`;
-    })
-    .join('');
+  return galleryMarkup(arr);
 }

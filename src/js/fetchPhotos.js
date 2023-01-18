@@ -22,12 +22,8 @@ function makeAddressParams(query, page, options) {
 
 async function fetchPhotos(query, page) {
   const params = makeAddressParams(query, page, options);
-  try {
-    const response = await axios.get(`${BASE_URL}?${params}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(`${BASE_URL}?${params}`);
+  return response.data;
 }
 
 export { fetchPhotos };
