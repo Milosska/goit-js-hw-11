@@ -1,15 +1,20 @@
 import { fetchPhotos } from './js/fetchPhotos';
 import galleryMarkup from './templates/gallery-markup.hbs';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const formEl = document.querySelector('.search-form');
 const galleryEl = document.querySelector('.gallery');
 const loadMoreBtnEl = document.querySelector('.load-more');
+
+let lightbox = new SimpleLightbox('.gallery a');
 let currentPage = 1;
 let query = '';
 let viewedImg = 0;
 
 formEl.addEventListener('submit', onFormSubmit);
+galleryEl.addEventListener('click', onCardClick);
 loadMoreBtnEl.addEventListener('click', onLoadBtnClick);
 
 function onFormSubmit(e) {
@@ -31,9 +36,7 @@ function onFormSubmit(e) {
       }
 
       Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-      galleryEl.insertAdjacentHTML('beforeend', makePhotosMarkup(hits));
-      enableBtn(loadMoreBtnEl);
-      viewedImg += hits.length;
+      makePhotosMarkup(hits);
     })
     .catch(err => console.log(err));
 
@@ -44,9 +47,7 @@ function onLoadBtnClick() {
   disableBtn(loadMoreBtnEl);
   fetchPhotos(query, currentPage)
     .then(({ hits, totalHits }) => {
-      galleryEl.insertAdjacentHTML('beforeend', makePhotosMarkup(hits));
-      enableBtn(loadMoreBtnEl);
-      viewedImg += hits.length;
+      makePhotosMarkup(hits);
 
       if (totalHits === viewedImg) {
         disableBtn(loadMoreBtnEl);
@@ -59,8 +60,16 @@ function onLoadBtnClick() {
   currentPage += 1;
 }
 
+function onCardClick(e) {
+  e.preventDefault();
+  lightbox.open(e.currentTarget);
+}
+
 function makePhotosMarkup(arr) {
-  return galleryMarkup(arr);
+  galleryEl.insertAdjacentHTML('beforeend', galleryMarkup(arr));
+  enableBtn(loadMoreBtnEl);
+  lightbox.refresh();
+  viewedImg += arr.length;
 }
 
 function enableBtn(btn) {

@@ -1,23 +1,55 @@
 .gallery {
-  padding: 0 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
+  padding: 12vh 5vh 0;
+
+  @media screen and (min-width: 768px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+.photo-link {
+  display: block;
+  margin: 0 auto;
+  text-decoration: none;
+  color: inherit;
+
+  @media screen and (min-width: 480px) {
+    width: 80vw;
+  }
+
+  @media screen and (min-width: 480px) {
+    width: 40vw;
+  }
+
+  @media screen and (min-width: 1440px) {
+    width: 22vw;
+  }
 }
 
 .photo-card {
-  width: 300px;
   & img {
+    display: block;
     width: 100%;
-    height: 200px;
+
+    @media screen and (min-width: 768px) {
+      height: 40vh;
+    }
+
+    @media screen and (min-width: 1440px) {
+      height: 35vh;
+    }
   }
 }
 
 .info {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   justify-content: center;
+
+  @media screen and (min-width: 768px) {
+    gap: 10px;
+  }
 
   & p {
     display: flex;
@@ -27,7 +59,27 @@
 }
 
 .load-more {
-  // display: block;
-  margin: 10px 45% 20px 45%;
-  padding: 5px 15px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  padding: 5px 5px;
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 16px;
+  background-color: rgb(54, 53, 53);
+  color: white;
+
+  cursor: pointer;
+
+  @media screen and (min-width: 768px) {
+    text-align: center;
+    padding: 5px 15px;
+    font-size: 20px;
+  }
+
+  @media screen and (min-width: 1440px) {
+    padding: 5px 15px;
+    font-size: 20px;
+  }
 }
