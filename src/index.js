@@ -6,7 +6,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const formEl = document.querySelector('.search-form');
 const galleryEl = document.querySelector('.gallery');
-const guardEl = document.querySelector('.js-guard');
+const onTopBtnEl = document.querySelector('.on-top');
 
 let lightbox = new SimpleLightbox('.gallery a');
 let currentPage = 1;
@@ -15,10 +15,12 @@ let viewedImg = 0;
 
 formEl.addEventListener('submit', onFormSubmit);
 galleryEl.addEventListener('click', onCardClick);
+onTopBtnEl.addEventListener('click', onUpScrollBtnClick);
 
 function onFormSubmit(e) {
   e.preventDefault();
   galleryEl.innerHTML = '';
+  disableBtn(onTopBtnEl);
   currentPage = 1;
   query = formEl.children[0].value.trim();
 
@@ -56,8 +58,18 @@ function makePhotosMarkup(arr) {
     return;
   }
 
-  observer.observe(guardEl);
+  observer.observe(galleryEl.lastElementChild);
   // enableBtn(loadMoreBtnEl);
+}
+
+function onUpScrollBtnClick() {
+  let yOffset = window.pageYOffset;
+  if (yOffset > 0) {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
 }
 
 // ============== Code Infinite Scroll Initiation =============
@@ -74,8 +86,10 @@ function onScrollDownload(entries, observer) {
       fetchPhotos(query, currentPage)
         .then(({ hits, totalHits }) => {
           makePhotosMarkup(hits);
+          enableBtn(onTopBtnEl);
+
           if (totalHits === viewedImg) {
-            observer.unobserve(guardEl);
+            observer.unobserve(galleryEl.lastElementChild);
             return Notiflix.Notify.info(
               "We're sorry, but you've reached the end of search results."
             );
@@ -83,6 +97,9 @@ function onScrollDownload(entries, observer) {
         })
         .catch(err => console.log(err));
       currentPage += 1;
+
+      let yOffset = window.pageYOffset;
+      console.log(yOffset);
     }
   });
 }
@@ -109,10 +126,10 @@ function onScrollDownload(entries, observer) {
 //   currentPage += 1;
 // }
 
-// function enableBtn(btn) {
-//   btn.removeAttribute('hidden');
-// }
+function enableBtn(btn) {
+  btn.removeAttribute('hidden');
+}
 
-// function disableBtn(btn) {
-//   btn.setAttribute('hidden', true);
-// }
+function disableBtn(btn) {
+  btn.setAttribute('hidden', true);
+}

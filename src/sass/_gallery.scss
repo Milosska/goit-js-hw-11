@@ -83,3 +83,20 @@
     font-size: 20px;
   }
 }
+
+.on-top {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  padding: 5px 10px;
+  background-color: rgb(69, 22, 180);
+  border: none;
+  border-radius: 50%;
+}
+
+.arrow {
+  width: 35px;
+  height: 35px;
+  transform: rotate(270deg);
+  fill: white;
+}
