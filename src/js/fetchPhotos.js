@@ -23,6 +23,7 @@ function makeAddressParams(query, page, options) {
 async function fetchPhotos(query, page) {
   const params = makeAddressParams(query, page, options);
   const response = await axios.get(`${BASE_URL}?${params}`);
+  console.log(response.data);
   return response.data;
 }
 

@@ -6,7 +6,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const formEl = document.querySelector('.search-form');
 const galleryEl = document.querySelector('.gallery');
-const loadMoreBtnEl = document.querySelector('.load-more');
+const guardEl = document.querySelector('.js-guard');
 
 let lightbox = new SimpleLightbox('.gallery a');
 let currentPage = 1;
@@ -15,7 +15,6 @@ let viewedImg = 0;
 
 formEl.addEventListener('submit', onFormSubmit);
 galleryEl.addEventListener('click', onCardClick);
-loadMoreBtnEl.addEventListener('click', onLoadBtnClick);
 
 function onFormSubmit(e) {
   e.preventDefault();
@@ -43,23 +42,6 @@ function onFormSubmit(e) {
   currentPage += 1;
 }
 
-function onLoadBtnClick() {
-  disableBtn(loadMoreBtnEl);
-  fetchPhotos(query, currentPage)
-    .then(({ hits, totalHits }) => {
-      makePhotosMarkup(hits);
-
-      if (totalHits === viewedImg) {
-        disableBtn(loadMoreBtnEl);
-        return Notiflix.Notify.info(
-          "We're sorry, but you've reached the end of search results."
-        );
-      }
-    })
-    .catch(err => console.log(err));
-  currentPage += 1;
-}
-
 function onCardClick(e) {
   e.preventDefault();
   lightbox.open(e.currentTarget);
@@ -67,15 +49,70 @@ function onCardClick(e) {
 
 function makePhotosMarkup(arr) {
   galleryEl.insertAdjacentHTML('beforeend', galleryMarkup(arr));
-  enableBtn(loadMoreBtnEl);
   lightbox.refresh();
   viewedImg += arr.length;
+
+  if (arr.length < 40) {
+    return;
+  }
+
+  observer.observe(guardEl);
+  // enableBtn(loadMoreBtnEl);
 }
 
-function enableBtn(btn) {
-  btn.removeAttribute('hidden');
+// ============== Code Infinite Scroll Initiation =============
+const observerOptions = {
+  root: null,
+  rootMargin: '1000px',
+  threshold: 0,
+};
+let observer = new IntersectionObserver(onScrollDownload, observerOptions);
+
+function onScrollDownload(entries, observer) {
+  entries.forEach(entry => {
+    if (entry.isIntersecting === true) {
+      fetchPhotos(query, currentPage)
+        .then(({ hits, totalHits }) => {
+          makePhotosMarkup(hits);
+          if (totalHits === viewedImg) {
+            observer.unobserve(guardEl);
+            return Notiflix.Notify.info(
+              "We're sorry, but you've reached the end of search results."
+            );
+          }
+        })
+        .catch(err => console.log(err));
+      currentPage += 1;
+    }
+  });
 }
 
-function disableBtn(btn) {
-  btn.setAttribute('hidden', true);
-}
+// ============== Code for Load Btn Initiation =============
+
+// const loadMoreBtnEl = document.querySelector('.load-more');
+
+// loadMoreBtnEl.addEventListener('click', onLoadBtnClick);
+
+// function onLoadBtnClick() {
+//   disableBtn(loadMoreBtnEl);
+//   fetchPhotos(query, currentPage)
+//     .then(({ hits, totalHits }) => {
+//       makePhotosMarkup(hits);
+//       if (totalHits === viewedImg) {
+//         disableBtn(loadMoreBtnEl);
+//         return Notiflix.Notify.info(
+//           "We're sorry, but you've reached the end of search results."
+//         );
+//       }
+//     })
+//     .catch(err => console.log(err));
+//   currentPage += 1;
+// }
+
+// function enableBtn(btn) {
+//   btn.removeAttribute('hidden');
+// }
+
+// function disableBtn(btn) {
+//   btn.setAttribute('hidden', true);
+// }
