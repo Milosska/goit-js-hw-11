@@ -1,0 +1,41 @@
+// ========= Auto-scroll/ stop-scroll button styles =========
+.auto-scroll-btn,
+.on-top {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgb(54, 53, 53);
+
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background-color: rgb(69, 22, 180);
+  }
+}
+
+.auto-scroll-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
+
+  width: 120px;
+  padding: 5px 10px;
+
+  font-size: 20px;
+  color: white;
+}
+
+// ========= On-top button styles =========
+
+.on-top {
+  position: fixed;
+  bottom: 30px;
+  right: 50px;
+  padding: 5px 10px;
+  border-radius: 50%;
+}
+
+.arrow {
+  width: 35px;
+  height: 35px;
+  transform: rotate(270deg);
+  fill: white;
+}

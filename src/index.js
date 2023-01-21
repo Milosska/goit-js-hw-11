@@ -1,4 +1,5 @@
 import { fetchPhotos } from './js/fetchPhotos';
+import './js/auto-scroll';
 import galleryMarkup from './templates/gallery-markup.hbs';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
